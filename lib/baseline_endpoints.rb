@@ -2,7 +2,7 @@ require 'active_support/core_ext/hash'
 require 'ice_nine'
 require 'ice_nine/core_ext/object'
 
-module BaseballEndpoints
+module BaselineEndpoints
   BASE_URL = "https://statsapi.mlb.com/api/".freeze
   ENDPOINTS = {
     "attendance": {

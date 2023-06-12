@@ -1,8 +1,10 @@
 require 'httparty'
-require 'baseball_endpoints'
+require 'baseline_endpoints'
+require 'active_support/core_ext/hash'
 
-class BaseballApi
-  include BaseballEndpoints
+
+class Baseline
+  include BaselineEndpoints
 
   def self.api_request(endpoint, options = {})
     url_info = ENDPOINTS[endpoint]
@@ -12,11 +14,11 @@ class BaseballApi
       url.sub! "{#{path_key}}", path_value.to_s
     end
     query = options.slice(*url_info[:query_params])
-    HTTParty.get(url, {:query => query})
+    HTTParty.get(url, {:query => query}).with_indifferent_access
   end
 
   def self.team_player_list(team_id, options = {})
-    BaseballApi.api_request('team_roster', {"teamId": team_id}.merge(options))
+    Baseline.api_request('team_roster', {"teamId": team_id}.merge(options))
   end
 
   def self.schedule(options = {"sportId" => 1})
@@ -30,7 +32,7 @@ class BaseballApi
 
   MLB_LEAGUE_IDS = [103, 104].freeze
   def self.team_list(options = {"leagueIds" => MLB_LEAGUE_IDS})
-    BaseballApi.api_request('teams', options)
+    Baseline.api_request('teams', options)
   end
 
   def self.game_at_bats(game_id, options = {})
@@ -39,6 +41,16 @@ class BaseballApi
   end
 
   def self.player_stats(player_id, options = {})
-    BaseballApi.api_request("person_stats", {"personId": player_id, "stats": "season"}.merge(options))
+    Baseline.api_request("person_stats", {"personId": player_id, "stats": "season"}.merge(options))
+  end
+
+  def self.player_info(player_id, options = {})
+    Baseline.api_request("person", {"personId": player_id}.merge(options))["people"].first
+  end
+
+
+
+  def self.endpoint_info(endpoint)
+    ENDPOINTS[endpoint]
   end
 end
