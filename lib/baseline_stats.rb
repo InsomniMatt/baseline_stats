@@ -1,7 +1,7 @@
 require 'httparty'
 require 'baseline_endpoints'
 require 'active_support/core_ext/hash'
-
+require 'date'
 
 class Baseline
   include BaselineEndpoints
@@ -21,8 +21,17 @@ class Baseline
     Baseline.api_request('team_roster', {"teamId": team_id}.merge(options))
   end
 
-  def self.schedule(options = {"sportId" => 1})
-    api_response = BaseballApi.api_request('schedule', options)
+  def self.all_player_list(season = Time.now.year, options = {})
+    Baseline.api_request("sports_players", {"sportId" => 1, "season" => season}.merge(options))[:people]
+  end
+
+  def self.schedule(start_date = nil, end_date = nil, options = {})
+    default_year = DateTime.now.year.to_s
+    start_date_string = start_date&.strftime("%Y-%m-%d")
+    end_date_string = end_date&.strftime("%Y-%m-%d")
+    options["startDate"] = start_date_string || "#{default_year}-03-29"
+    options["endDate"] = end_date_string || "#{default_year}-10-01"
+    api_response = Baseline.api_request('schedule', {"sportId" => 1 }.merge(options))
     games = []
     api_response["dates"].each do |day|
       games += day["games"]
@@ -36,7 +45,7 @@ class Baseline
   end
 
   def self.game_at_bats(game_id, options = {})
-    api_response = BaseballApi.api_request("game_playByPlay", {"gamePk": game_id}.merge(options))
+    api_response = Baseline.api_request("game_playByPlay", {"gamePk": game_id}.merge(options))
     api_response['allPlays'].filter{_1["result"]["type"] == "atBat"}
   end
 
@@ -47,8 +56,6 @@ class Baseline
   def self.player_info(player_id, options = {})
     Baseline.api_request("person", {"personId": player_id}.merge(options))["people"].first
   end
-
-
 
   def self.endpoint_info(endpoint)
     ENDPOINTS[endpoint]

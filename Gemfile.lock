@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    baseball_stats_wrapper (0.0.1)
+    baseline_stats (0.0.1)
 
 GEM
   remote: https://rubygems.org/
@@ -29,7 +29,7 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport
-  baseball_stats_wrapper!
+  baseline_stats!
   httparty
   ice_nine
 
