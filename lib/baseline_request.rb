@@ -14,6 +14,10 @@ class BaselineRequest
     call_api
   end
 
+  def info
+    @api_info
+  end
+
   def call_api
     path, error_array = construct_path
     query = @options.slice(*@api_info[:query_params])
