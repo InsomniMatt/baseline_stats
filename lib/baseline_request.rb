@@ -14,7 +14,22 @@ class BaselineRequest
     call_api
   end
 
+  def info
+    @api_info
+  end
+
   def call_api
+    path, error_array = construct_path
+    query = @options.slice(*@api_info[:query_params])
+    @api_info[:required_params].each do |req_group|
+      error_array << "Missing one of the following required parameters: #{req_group.to_s}" unless req_group.any? {query.keys.include? _1 }
+    end
+
+    return error_array unless error_array.empty?
+    HTTParty.get(path, {:query => query})
+  end
+
+  def construct_path
     error_array = []
     url = @api_info[:url].dup
     @api_info[:path_params].each do |path_key, value|
@@ -30,12 +45,7 @@ class BaselineRequest
       url.sub! "{#{path_key}}", path_value
     end
 
-    query = @options.slice(*@api_info[:query_params])
-    @api_info[:required_params].each do |req_group|
-      error_array << "Missing one of the following required parameters: #{req_group.to_s}" unless req_group.any? {query.keys.include? _1 }
-    end
-    return error_array unless error_array.empty?
-    HTTParty.get(url, {:query => query})
+    [url, error_array]
   end
 
   def params

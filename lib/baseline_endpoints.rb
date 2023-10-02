@@ -671,7 +671,7 @@ module BaselineEndpoints
           "required": true,
         }
       },
-      "query_params": [%w[season activeStatus leagueIds sportId sportIds gameType hydrate fields]],
+      "query_params": %w[season activeStatus leagueIds sportId sportIds gameType hydrate fields],
       "required_params": [],
       "test_params": {leagueIds: [103, 104]},
     },
