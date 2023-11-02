@@ -352,7 +352,7 @@ module BaselineEndpoints
       "query_params": %w[updatedSince fields],
       "required_params": [["updatedSince"]],
       "note": "updatedSince param is a DateTime object",
-      "test_params": {updatedSince: DateTime.new(2023, 9, 1)},
+      "test_params": {updatedSince: Date.new(2023, 9, 1)},
     },
     "people_free_agents": {
       "url": BASE_URL + "{ver}/people/freeAgents",
@@ -644,7 +644,7 @@ module BaselineEndpoints
         }
       },
       "query_params": %w[stats playerPool position teamId leagueId limit offset group gameType season sportIds sortStat order hydrate fields personId metrics],
-      "required_params": [["stats", "group"]],
+      "required_params": [["stats"], ["group"]],
       "note": "Limit defaults to 50 records.  `stats` field can be `season` or `career`; `group` can be `hitting`, `pitching`, or `fielding`.",
       "test_params": {stats: "season", group: "hitting"},
     },
