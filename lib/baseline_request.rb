@@ -26,7 +26,19 @@ class BaselineRequest
     end
 
     return error_array unless error_array.empty?
-    HTTParty.get(path, {:query => query})
+    HTTParty.get(path, {
+      :query => query,
+      :query_string_normalizer => -> (h) {
+        h.map do |key, value|
+          if value.is_a? Array
+            query_string = value.map {|v| "#{key}=#{v}"}.join('&')
+          else
+            query_string = "#{key}=#{value}"
+          end
+          query_string
+        end.join('&')
+      }
+    })
   end
 
   def construct_path
