@@ -1,5 +1,6 @@
 # Baseline Stats Library
-The Baseline Stats library provides access to the Statcast API from applications written in Ruby.
+Ruby wrapper for the MLB Statcast API
+Created by Matthew Woodard
 
 ## Installation
 ```
@@ -60,5 +61,8 @@ You can view all available endpoints with the `all_endpoints` method.
 Baseline.all_endpoints
 ```
 
+## Copyright notice
+This gem and its author are not affiliated with the MLB or any MLB team.
+This gem interacts with MLB's Statcast API, whose use is subject to the notice posted at http://gdx.mlb.com/components/copyright.txt.
 
 
